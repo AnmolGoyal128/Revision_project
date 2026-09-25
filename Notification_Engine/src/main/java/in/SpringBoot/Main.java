@@ -1,5 +1,8 @@
 package in.SpringBoot;
 
+import in.SpringBoot.Notification.EmailNotification;
+import in.SpringBoot.Notification.NotificationService;
+import in.SpringBoot.Notification.SmsNotification;
 import in.SpringBoot.Service.OrderService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
@@ -12,13 +15,11 @@ import java.io.ObjectInputFilter;
 public class Main {
     static void main() {
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(ObjectInputFilter.Config.class);
+        NotificationService notificationService = new SmsNotification();
 
-        OrderService orderService =
-                context.getBean(OrderService.class);
-
+        OrderService orderService = new OrderService(notificationService);
+        orderService.setNotification(notificationService);
         orderService.placeOrder();
-        System.out.println("Hello World");
 
     }
 }

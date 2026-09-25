@@ -7,7 +7,7 @@ public class PushNotification implements NotificationService {
 
 
     @Override
-    public void sendNotificationmessage(String message) {
-
+    public void sendNotification(String s) {
+        System.out.println("Notification sent via Push ");
     }
 }

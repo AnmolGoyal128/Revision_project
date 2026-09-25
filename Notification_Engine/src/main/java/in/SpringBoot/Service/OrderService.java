@@ -13,8 +13,9 @@ public class OrderService {
 
     // Dependency Injection of Notification Service into orderService
     @Autowired
-    NotificationService notificationService;
-    public OrderService(@Qualifier("EmailNotification")
+    private NotificationService notificationService;
+
+    public OrderService(
                         NotificationService notificationService) {
         this.notificationService = notificationService;
     }
@@ -27,6 +28,9 @@ public class OrderService {
                 "Your order has been placed successfully."
         );
 
+    }
 
+    public void setNotification(NotificationService notificationService) {
+        this.notificationService = notificationService;
     }
 }
