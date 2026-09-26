@@ -3,5 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/Notification_Engine/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Notification_Engine/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Payment_Gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Payment_Gateway/src/main/resources" charset="UTF-8" />
   </component>
 </project>
