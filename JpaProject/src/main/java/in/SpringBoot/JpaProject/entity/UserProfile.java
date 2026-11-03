@@ -16,11 +16,10 @@ public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String Bio;
-    private String courseName;
-    private Long phoneNo;
-    private Gender gender;
+    private String tagetAudience;
+    private String prerequisites;
+    private String SyllabusOverview;
+
 
     @OneToOne
     private Course course;
