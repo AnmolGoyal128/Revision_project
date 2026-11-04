@@ -19,11 +19,14 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private int description;
-    private int price;
+    private String description;
+    private double price;
 
     @ManyToOne
-    //@JoinColumn(name = "instructor_id")
+    @JoinColumn(
+            name = "instructor_id",
+            nullable = false
+    )
     private Instructor instructor;
 
     @OneToOne
@@ -32,8 +35,8 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private List<Lesson> lessons;
 
-    @ManyToMany
-    private Set<Student> student;
+//    @ManyToMany
+//    private Set<Student> student;
 
 
 }
