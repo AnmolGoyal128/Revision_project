@@ -6,8 +6,8 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@PersistenceContext
 public class CourseRepository {
+    @PersistenceContext
     private EntityManager entityManager;
 
     public Course save(Course course) {

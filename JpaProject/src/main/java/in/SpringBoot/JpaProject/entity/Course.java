@@ -24,16 +24,16 @@ public class Course {
 
     @ManyToOne
     @JoinColumn(
-            name = "instructor_id",
-            nullable = false
+            name = "instructor_id"
+            //nullable = false
     )
     private Instructor instructor;
 
-    @OneToOne
-    private UserProfile userProfile;
-
-    @OneToMany(mappedBy = "course")
-    private List<Lesson> lessons;
+//    @OneToOne
+//    private UserProfile userProfile;
+//
+//    @OneToMany(mappedBy = "course")
+//    private List<Lesson> lessons;
 
 //    @ManyToMany
 //    private Set<Student> student;
