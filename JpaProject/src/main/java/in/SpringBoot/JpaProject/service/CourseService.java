@@ -3,8 +3,10 @@ package in.SpringBoot.JpaProject.service;
 import in.SpringBoot.JpaProject.entity.Course;
 import in.SpringBoot.JpaProject.entity.Instructor;
 import in.SpringBoot.JpaProject.entity.Lesson;
+import in.SpringBoot.JpaProject.entity.Student;
 import in.SpringBoot.JpaProject.repository.CourseRepository;
 import in.SpringBoot.JpaProject.repository.InstructorRepository;
+import in.SpringBoot.JpaProject.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,14 @@ public class CourseService {
     private final CourseRepository courseRepository;
 
     private final InstructorRepository instructorRepository;
+    private final StudentRepository studentRepository;
 
-    public CourseService(CourseRepository courseRepository, InstructorRepository instructorRepository) {
+    public CourseService(CourseRepository courseRepository,
+                         InstructorRepository instructorRepository,
+                         StudentRepository studentRepository) {
         this.courseRepository = courseRepository;
         this.instructorRepository = instructorRepository;
+        this.studentRepository = studentRepository;
     }
 
     @Transactional
@@ -30,6 +36,7 @@ public class CourseService {
         if (course.getUserProfile() != null) {
             course.getUserProfile().setCourse(course);
         }
+        attachStudents(course);
 
         Instructor instructor = course.getInstructor();
 
@@ -93,6 +100,7 @@ public class CourseService {
         if (course.getUserProfile() != null) {
             course.getUserProfile().setCourse(course);
         }
+        attachStudents(course);
         Instructor instructor = course.getInstructor();
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor is required");
@@ -105,6 +113,21 @@ public class CourseService {
             course.setInstructor(existingInstructor);
         } else {
             instructorRepository.save(instructor);
+        }
+    }
+
+    private void attachStudents(Course course) {
+        List<Student> studentReferences = course.getStudents();
+        course.setStudents(new java.util.ArrayList<>());
+        for (Student studentReference : studentReferences) {
+            if (studentReference.getId() == null) {
+                throw new IllegalArgumentException("Existing student id is required");
+            }
+            Student student = studentRepository.findById(studentReference.getId());
+            if (student == null) {
+                throw new IllegalArgumentException("Student not found: " + studentReference.getId());
+            }
+            course.addStudent(student);
         }
     }
 }

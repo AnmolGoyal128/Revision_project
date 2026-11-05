@@ -2,7 +2,6 @@ package in.SpringBoot.JpaProject.entity;
 
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +25,7 @@ public class Course {
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_profile_id", unique = true)
-    @JsonManagedReference
+    @JsonManagedReference("course-user-profile")
     private UserProfile userProfile;
 
     @ManyToOne
@@ -44,8 +43,17 @@ public class Course {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @JsonManagedReference
+    @JsonManagedReference("course-lessons")
     private List<Lesson> lessons = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "course_student",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
+    @JsonManagedReference("course-students")
+    private List<Student> students = new ArrayList<>();
 
     public void addLesson(Lesson lesson) {
         lessons.add(lesson);
@@ -64,8 +72,19 @@ public class Course {
         }
     }
 
-//    @ManyToMany
-//    private Set<Student> student;
+    public void addStudent(Student student) {
+        if (!students.contains(student)) {
+            students.add(student);
+        }
+        if (!student.getCourses().contains(this)) {
+            student.getCourses().add(this);
+        }
+    }
+
+    public void removeStudent(Student student) {
+        students.remove(student);
+        student.getCourses().remove(this);
+    }
 
 
 }

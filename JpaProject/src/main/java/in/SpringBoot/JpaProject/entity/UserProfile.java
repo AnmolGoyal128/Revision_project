@@ -23,7 +23,7 @@ public class UserProfile {
 
 
     @OneToOne(mappedBy = "userProfile")
-    @JsonBackReference
+    @JsonBackReference("course-user-profile")
     private Course course;
 
 
