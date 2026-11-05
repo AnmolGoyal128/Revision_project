@@ -1,5 +1,6 @@
 package in.SpringBoot.JpaProject.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,8 @@ public class Lesson {
     private String videoUrl;
     private int durationMinutes;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "course_id", nullable = false)
+    @JsonBackReference
     private Course course;
 }

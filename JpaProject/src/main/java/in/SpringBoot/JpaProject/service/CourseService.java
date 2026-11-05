@@ -2,10 +2,13 @@ package in.SpringBoot.JpaProject.service;
 
 import in.SpringBoot.JpaProject.entity.Course;
 import in.SpringBoot.JpaProject.entity.Instructor;
+import in.SpringBoot.JpaProject.entity.Lesson;
 import in.SpringBoot.JpaProject.repository.CourseRepository;
 import in.SpringBoot.JpaProject.repository.InstructorRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CourseService {
@@ -20,6 +23,14 @@ public class CourseService {
 
     @Transactional
     public Course save(Course course) {
+        for (Lesson lesson : course.getLessons()) {
+            lesson.setCourse(course);
+        }
+
+        if (course.getUserProfile() != null) {
+            course.getUserProfile().setCourse(course);
+        }
+
         Instructor instructor = course.getInstructor();
 
         if (instructor == null) {
@@ -43,14 +54,57 @@ public class CourseService {
 //        course1.setDescription("Learn the fundamentals of Java programming.");
 //        course1.setInstructor(instructor1);
 //
-        Instructor instructor1 = new Instructor();
-        instructor1.setName("Anmol");
-        instructor1.setEmail("anmol@gmail.com");
-        instructor1.setBio("Anmol is a skilled instructor with expertise in various subjects. With a passion for teaching and a commitment to student success, Anmol creates engaging learning experiences that inspire and empower learners to reach their full potential.");
-        instructorRepository.save(instructor1);
-
-        course.setInstructor(instructor1);
-
         return courseRepository.save(course);
+    }
+
+    public List<Course> findAll() {
+        return courseRepository.findAll();
+    }
+
+    public Course findById(Long id) {
+        return courseRepository.findById(id);
+    }
+
+    @Transactional
+    public Course update(Long id, Course course) {
+        Course existingCourse = courseRepository.findById(id);
+        if (existingCourse == null) {
+            return null;
+        }
+        course.setId(id);
+        prepareCourse(course);
+        return courseRepository.update(course);
+    }
+
+    @Transactional
+    public boolean delete(Long id) {
+        Course course = courseRepository.findById(id);
+        if (course == null) {
+            return false;
+        }
+        courseRepository.delete(course);
+        return true;
+    }
+
+    private void prepareCourse(Course course) {
+        for (Lesson lesson : course.getLessons()) {
+            lesson.setCourse(course);
+        }
+        if (course.getUserProfile() != null) {
+            course.getUserProfile().setCourse(course);
+        }
+        Instructor instructor = course.getInstructor();
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor is required");
+        }
+        if (instructor.getId() != null) {
+            Instructor existingInstructor = instructorRepository.findById(instructor.getId());
+            if (existingInstructor == null) {
+                throw new IllegalArgumentException("Instructor not found: " + instructor.getId());
+            }
+            course.setInstructor(existingInstructor);
+        } else {
+            instructorRepository.save(instructor);
+        }
     }
 }

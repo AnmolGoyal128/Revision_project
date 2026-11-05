@@ -1,5 +1,6 @@
 package in.SpringBoot.JpaProject.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,8 @@ public class UserProfile {
     private String SyllabusOverview;
 
 
-    @OneToOne
+    @OneToOne(mappedBy = "userProfile")
+    @JsonBackReference
     private Course course;
 
 
